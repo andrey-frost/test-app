@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Contact;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ContactParser;
 
 class ContactController extends Controller
 {
@@ -128,6 +129,26 @@ class ContactController extends Controller
         $this->authorize('delete', $contact);
 
         $contact->delete();
+
+        return redirect()->route('contacts.index');
+    }
+
+    public function import()
+    {
+        return view('contacts.import');
+    }
+
+    public function parseImportFile(Request $request, ContactParser $parser)
+    {
+        $validated = $request->validate([
+            'file'  => 'required|max:2048',
+        ]);
+
+        if($request->file()) {
+            $filePath = $request->file('file')->getRealPath();
+
+            $parser->parse($filePath);
+        }
 
         return redirect()->route('contacts.index');
     }

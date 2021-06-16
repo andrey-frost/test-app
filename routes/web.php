@@ -18,6 +18,11 @@ Route::get('/', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::get('/contacts/import', [ContactController::class, 'import'])
+    ->middleware(['auth'])->name('contacts.import');
+Route::post('/contacts/import', [ContactController::class, 'parseImportFile'])
+    ->middleware(['auth'])->name('contacts.parse_import');
+
 Route::resource('contacts', ContactController::class)->middleware(['auth']);
 
 require __DIR__.'/auth.php';

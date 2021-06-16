@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('contacts.index')" :active="request()->routeIs('contacts.index')">
                         {{ __('Contacts') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('contacts.import')" :active="request()->routeIs('contacts.import')">
+                        {{ __('Import') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -71,6 +74,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('contacts.index')" :active="request()->routeIs('contacts.index')">
                 {{ __('Contacts') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('contacts.import')" :active="request()->routeIs('contacts.import')">
+                {{ __('Import') }}
             </x-responsive-nav-link>
         </div>
 
