@@ -25,8 +25,16 @@
                         <p>
                             <a href="{{ route('contacts.show', $contact->id) }}" class="font-medium text-indigo-600 hover:text-indigo-500">Show</a>
                             <a href="{{ route('contacts.edit', $contact->id) }}" class="font-medium text-indigo-600 hover:text-indigo-500">Edit</a>
-                            <a href="{{ route('contacts.destroy', $contact->id) }}" class="font-medium text-red-600 hover:text-red-500">Delete</a>
                         </p>
+                        <div>
+                            <form action="{{ route('contacts.destroy', $contact->id) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             @endforeach

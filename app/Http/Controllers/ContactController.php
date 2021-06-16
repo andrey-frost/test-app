@@ -66,6 +66,8 @@ class ContactController extends Controller
     {
         $contact = Contact::find($id);
 
+        $this->authorize('view', $contact);
+
         return view('contacts.show', [
             'contact' => $contact,
         ]);
@@ -94,13 +96,16 @@ class ContactController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $contact = Contact::find($id);
+
+        $this->authorize('update', $contact);
+
         $validated = $request->validate([
             'name'  => 'required|min:2',
             'email' => 'required|email',
             'phone' => 'required|numeric',
         ]);
 
-        $contact = Contact::find($id);
         $contact->first_name = $validated['name'];
         $contact->email = $validated['email'];
         $contact->phone = $validated['phone'];
@@ -119,6 +124,9 @@ class ContactController extends Controller
     public function destroy($id)
     {
         $contact = Contact::find($id);
+
+        $this->authorize('delete', $contact);
+
         $contact->delete();
 
         return redirect()->route('contacts.index');
