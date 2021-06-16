@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Validator;
 
 class ContactParser
 {
+    private $klaviyo;
+
+    public function __construct(KlaviyoClient $klaviyo)
+    {
+        $this->klaviyo = $klaviyo;
+    }
+
     public function parse($filePath)
     {
         if (($handle = fopen($filePath, 'r')) !== FALSE) {
@@ -30,6 +37,12 @@ class ContactParser
                 $contact->user_id = Auth::id();
 
                 $contact->save();
+
+                $this->klaviyo->addContact([
+                    'name'  => $data[0],
+                    'email' => $data[1],
+                    'phone' => $data[2],
+                ]);
             }
             fclose($handle);
         }

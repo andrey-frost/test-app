@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Contact;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ContactParser;
+use App\Services\KlaviyoClient;
 
 class ContactController extends Controller
 {
@@ -38,7 +39,7 @@ class ContactController extends Controller
      *
      * @return Response
      */
-    public function store(Request $request)
+    public function store(Request $request, KlaviyoClient $klaviyo)
     {
         $validated = $request->validate([
             'name'  => 'required|min:2',
@@ -53,6 +54,8 @@ class ContactController extends Controller
         $contact->user_id = Auth::id();
 
         $contact->save();
+
+        $klaviyo->addContact($validated);
 
         return redirect()->route('contacts.index');
     }
@@ -95,7 +98,7 @@ class ContactController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, KlaviyoClient $klaviyo, $id)
     {
         $contact = Contact::find($id);
 
@@ -107,11 +110,15 @@ class ContactController extends Controller
             'phone' => 'required|numeric',
         ]);
 
+        $oldEmail = $contact->email;
+
         $contact->first_name = $validated['name'];
         $contact->email = $validated['email'];
         $contact->phone = $validated['phone'];
 
         $contact->save();
+
+        $klaviyo->updateContact($validated, $oldEmail);
 
         return redirect()->route('contacts.index');
     }
